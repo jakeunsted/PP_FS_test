@@ -35,7 +35,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  // schema: true,
+  schema: true,
   datastore: 'default',
 
 
@@ -70,22 +70,10 @@ module.exports.models = {
   ***************************************************************************/
 
   attributes: {
-    createdAt: { type: 'number', autoCreatedAt: true, },
-    updatedAt: { type: 'number', autoUpdatedAt: true, },
-    id: { type: 'number', autoIncrement: true, columnName: '_id' },
-    //--------------------------------------------------------------------------
-    //  /\   Using MongoDB?
-    //  ||   Replace `id` above with this instead:
-    //
-    // ```
-    // id: { type: 'string', columnName: '_id' },
-    // ```
-    //
-    // Plus, don't forget to configure MongoDB as your default datastore:
-    // https://sailsjs.com/docs/tutorials/using-mongo-db
-    //--------------------------------------------------------------------------
+    createdAt: { type: 'number', autoCreatedAt: true },
+    updatedAt: { type: 'number', autoUpdatedAt: true },
+    id: { type: 'string', columnName: '_id' }
   },
-
 
   /******************************************************************************
   *                                                                             *
@@ -105,7 +93,6 @@ module.exports.models = {
     default: 'ybuFeZZS1v4K0Diy/1I3gJ9plncJI3Ua7hw7dApz5/I='
   },
 
-
   /***************************************************************************
   *                                                                          *
   * Whether or not implicit records for associations should be cleaned up    *
@@ -120,6 +107,4 @@ module.exports.models = {
   ***************************************************************************/
 
   cascadeOnDestroy: true
-
-
 };
