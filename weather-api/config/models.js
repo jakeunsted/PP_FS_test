@@ -36,6 +36,7 @@ module.exports.models = {
   ***************************************************************************/
 
   // schema: true,
+  datastore: 'default',
 
 
   /***************************************************************************
@@ -53,7 +54,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  // migrate: 'alter',
+  migrate: 'alter',
 
 
   /***************************************************************************
@@ -71,7 +72,7 @@ module.exports.models = {
   attributes: {
     createdAt: { type: 'number', autoCreatedAt: true, },
     updatedAt: { type: 'number', autoUpdatedAt: true, },
-    id: { type: 'number', autoIncrement: true, },
+    id: { type: 'number', autoIncrement: true, columnName: '_id' },
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:
