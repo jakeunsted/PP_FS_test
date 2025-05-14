@@ -79,6 +79,12 @@
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+// @ts-ignore
+import { definePageMeta } from '#imports'
+
+definePageMeta({
+  layout: 'default'
+})
 
 const authStore = useAuthStore();
 const router = useRouter();

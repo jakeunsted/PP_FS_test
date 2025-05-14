@@ -39,8 +39,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; // or #imports for Nuxt 3 auto-import
+import { useRouter } from 'vue-router';
 import { useRuntimeConfig } from 'nuxt/app';
+
+// @ts-ignore
+import { definePageMeta } from '#imports'
+
+definePageMeta({
+  layout: 'auth'
+})
 
 const email = ref('');
 const password = ref('');
