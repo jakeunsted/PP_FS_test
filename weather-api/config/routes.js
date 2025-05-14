@@ -22,4 +22,8 @@ module.exports.routes = {
   'GET /api/auth/me': 'AuthController.me',
 
 
+  // Weather routes
+  'POST /api/geocode': 'WeatherController.geocode',
+  'GET /api/weather': 'WeatherController.getWeather'
+
 };
