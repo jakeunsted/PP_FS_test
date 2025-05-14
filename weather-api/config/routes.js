@@ -10,5 +10,9 @@
 
 module.exports.routes = {
 
+  // Favourite Locations
+  'POST /api/favourites': 'FavouriteLocationController.create',
+  'GET /api/favourites': 'FavouriteLocationController.find',
+  'DELETE /api/favourites/:id': 'FavouriteLocationController.destroy',
 
 };
