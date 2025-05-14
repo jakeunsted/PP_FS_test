@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   modules: [
     'vuetify-nuxt-module',
     '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
   ],
   runtimeConfig: {
     public: {

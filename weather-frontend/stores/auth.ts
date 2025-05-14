@@ -12,15 +12,14 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User | null,
     isLoggedIn: false,
-    guestUserIdentifier: null as string | null,
   }),
   actions: {
     setUser(userData: User | null) {
       this.user = userData;
       this.isLoggedIn = !!userData;
       if (!userData) {
-        // If logging out, clear guest identifier or handle as needed
-        // this.guestUserIdentifier = null;
+        // logout
+        this.logout();
       }
     },
     async fetchCurrentUser() {
@@ -53,20 +52,5 @@ export const useAuthStore = defineStore('auth', {
         router.push('/login');
       }
     },
-    // Generates or retrieves a guest identifier for non-logged-in users to save favourites
-    getSetGuestIdentifier(): string {
-      if (this.isLoggedIn && this.user) return this.user.id; // If logged in, use their actual ID
-
-      if (import.meta.client) { // Ensure localStorage is available
-        let guestId = localStorage.getItem('guestUserIdentifier');
-        if (!guestId) {
-          guestId = crypto.randomUUID(); // Simple UUID generation
-          localStorage.setItem('guestUserIdentifier', guestId);
-        }
-        this.guestUserIdentifier = guestId;
-        return guestId;
-      }
-      return this.guestUserIdentifier || 'default-guest';
-    }
   },
 });

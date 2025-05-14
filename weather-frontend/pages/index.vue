@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="fill-height pa-0 ma-0" style="background-color: #f0f2f5;"> <v-row align="center" justify="center" class="fill-height">
+  <v-container fluid class="fill-height pa-0 ma-0"> <v-row align="center" justify="center">
       <v-col cols="12" sm="10" md="8" lg="6" xl="4">
         <v-card class="pa-sm-6 pa-md-8" elevation="3">
           <v-card-title class="text-h4 font-weight-bold text-center mb-2 primary--text">
@@ -72,7 +72,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore();
-const router = useRouter();
 
 const searchQuery = ref('');
 const loading = ref(false);
@@ -147,32 +146,20 @@ async function performSearch() {
 
 async function toggleFavourite() {
   if (!weatherData.value) return;
-  if (!authStore.isLoggedIn && !authStore.guestUserIdentifier) {
+  if (!authStore.isLoggedIn) {
     // Prompt to login or handle guest identifier
     searchError.value = "Please login to save favourites, or enable guest favourites.";
     return;
   }
 
-  const userIdentifier = authStore.isLoggedIn ? authStore.user!.id : authStore.getSetGuestIdentifier();
+  const userIdentifier = authStore.isLoggedIn ? authStore.user!.id : '';
   console.log('Toggling favourite for:', weatherData.value.city, 'User/Guest ID:', userIdentifier);
-  // TODO: Implement API call to POST /api/favourites
-  // body: { userIdentifier, cityName, latitude, longitude, country (optional) }
-  // Handle success/error, update UI to show if it's favourited
 }
 
-async function handleLogout() {
-  await authStore.logout();
-  // Middleware should handle redirect, or you can force it:
-  // router.push('/login');
-}
-
-// Attempt to fetch user if navigating directly to this page and state isn't hydrated
-// The auth plugin should handle this on initial load, but this is a safety net for direct nav / refresh.
 import { onMounted } from 'vue';
 onMounted(async () => {
-  if (process.client && !authStore.isLoggedIn) {
+  if (!authStore.isLoggedIn) {
     await authStore.fetchCurrentUser();
-    // If still not logged in after fetch, the middleware should kick in on next interaction or if it re-runs
   }
 });
 </script>
@@ -181,5 +168,4 @@ onMounted(async () => {
 .fill-height {
   min-height: 100vh;
 }
-/* Add any additional styling if needed */
 </style>
