@@ -2,19 +2,10 @@
   <v-container fluid class="fill-height pa-0 ma-0" style="background-color: #f0f2f5;"> <v-row align="center" justify="center" class="fill-height">
       <v-col cols="12" sm="10" md="8" lg="6" xl="4">
         <v-card class="pa-sm-6 pa-md-8" elevation="3">
-          <div class="text-right mb-n2" v-if="authStore.isLoggedIn">
-            <v-chip small color="primary" outlined @click="router.push('/favourites')">
-              <v-icon start icon="mdi-heart"></v-icon>
-              Favourites
-            </v-chip>
-          </div>
           <v-card-title class="text-h4 font-weight-bold text-center mb-2 primary--text">
             Weather Search
           </v-card-title>
-          <v-card-subtitle v-if="authStore.user" class="text-center mb-6">
-            Welcome, {{ authStore.user.fullName || authStore.user.email }}!
-          </v-card-subtitle>
-          <v-card-subtitle v-else class="text-center mb-6">
+          <v-card-subtitle class="text-center mb-6">
             Search for current weather and forecasts.
           </v-card-subtitle>
 
@@ -62,12 +53,6 @@
                   </v-list-item>
                 </v-card>
             </div>
-          </div>
-
-          <div class="text-center mt-8" v-if="authStore.isLoggedIn">
-            <v-btn @click="handleLogout" color="grey" variant="text">
-              <v-icon start icon="mdi-logout"></v-icon>Logout
-            </v-btn>
           </div>
         </v-card>
       </v-col>

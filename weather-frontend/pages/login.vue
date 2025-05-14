@@ -71,11 +71,7 @@ async function handleLogin() {
         email: email.value,
         password: password.value,
       },
-      // If $fetch doesn't automatically handle credentials for cross-origin:
-      // headers: { 'Content-Type': 'application/json' },
-      // credentials: 'include', // This might not be a direct option for $fetch,
-                               // investigate how Nuxt's $fetch handles this or use native fetch / Axios.
-                               // For same-origin (if Nuxt proxies API calls), it's simpler.
+      credentials: 'include',
     });
 
     console.log('Login successful:', response.user);

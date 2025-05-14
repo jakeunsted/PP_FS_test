@@ -91,6 +91,7 @@ async function handleRegister() {
         email: email.value,
         password: password.value,
       },
+      credentials: 'include'
     });
 
     successMessage.value = response.message + " Redirecting to login...";

@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         await $fetch(`${config.public.apiBase}/auth/logout`, {
           method: 'POST',
-          // credentials: 'include'
+          credentials: 'include'
         });
       } catch (error) {
         console.error('Error during logout API call:', error);
