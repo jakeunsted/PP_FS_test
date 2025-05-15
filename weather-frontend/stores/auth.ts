@@ -14,12 +14,12 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: false,
   }),
   actions: {
-    setUser(userData: User | null) {
+    async setUser(userData: User | null) {
       this.user = userData;
       this.isLoggedIn = !!userData;
       if (!userData) {
         // logout
-        this.logout();
+        await this.logout();
       }
     },
     async fetchCurrentUser() {
@@ -30,9 +30,9 @@ export const useAuthStore = defineStore('auth', {
         const { user } = await $fetch<{ user: User }>(`${config.public.apiBase}/auth/me`, {
           credentials: 'include'
         });
-        this.setUser(user);
+        await this.setUser(user);
       } catch (error) {
-        this.setUser(null);
+        await this.setUser(null);
         console.warn('Not logged in or session expired.');
       }
     },
@@ -46,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.error('Error during logout API call:', error);
       } finally {
-        this.setUser(null);
+        await this.setUser(null);
         // Navigate to login or home page
         const router = useRouter();
         router.push('/login');

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Login</h2>
@@ -67,10 +67,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+// @ts-ignore
+import { useRouter, navigateTo } from '#imports';
 import { useRuntimeConfig } from 'nuxt/app';
 import { useAuthStore } from '../stores/auth';
-
 // @ts-ignore
 import { definePageMeta } from '#imports'
 
@@ -82,9 +82,9 @@ const email = ref('');
 const password = ref('');
 const errorMessage = ref<string | null>(null);
 const loading = ref(false);
-const router = useRouter();
 const config = useRuntimeConfig(); // To get API base URL
 const authStore = useAuthStore();
+const router = useRouter();
 
 async function handleLogin() {
   loading.value = true;
@@ -100,8 +100,25 @@ async function handleLogin() {
     });
 
     console.log('Login successful:', response.user);
-    authStore.setUser(response.user);
-    router.push('/'); // Redirect to homepage or dashboard
+    await authStore.setUser(response.user);
+    
+    // Try using navigateTo instead of router.push
+    try {
+      console.log('Attempting navigation...');
+      await navigateTo('/', { replace: true });
+      console.log('Navigation completed');
+    } catch (navigationError) {
+      console.error('Navigation error:', navigationError);
+      // Fallback to router.push if navigateTo fails
+      try {
+        console.log('Falling back to router.push...');
+        await router.push('/');
+        console.log('Router push completed');
+      } catch (fallbackError) {
+        console.error('Fallback navigation error:', fallbackError);
+        errorMessage.value = 'Login successful but failed to redirect. Please try refreshing the page.';
+      }
+    }
   } catch (error: any) {
     console.error('Login error:', error);
     if (error.data && error.data.error) {

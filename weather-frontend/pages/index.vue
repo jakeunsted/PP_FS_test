@@ -2,7 +2,7 @@
   <v-container fluid class="min-h-screen p-0 m-0">
     <v-row align="center" justify="center">
       <v-col cols="12" sm="10" md="8" lg="6" xl="4">
-        <v-card class="pa-sm-6 pa-md-8" elevation="3">
+        <v-card class="pa-sm-6 pa-md-8 mt-10" elevation="3">
           <v-card-title class="text-h4 font-weight-bold text-center mb-2 primary--text">
             Weather Search
           </v-card-title>
@@ -63,8 +63,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { useRuntimeConfig } from 'nuxt/app';
 // @ts-ignore
 import { definePageMeta } from '#imports'
 
@@ -73,7 +73,7 @@ definePageMeta({
 })
 
 const authStore = useAuthStore();
-
+const config = useRuntimeConfig(); // To get API base URL
 const searchQuery = ref('');
 const loading = ref(false);
 const searchError = ref<string | null>(null);
@@ -107,7 +107,7 @@ async function performSearch() {
 
   try {
     // First, geocode the city name
-    const geocodeResponse = await fetch('/api/geocode', {
+    const geocodeResponse = await fetch(`${config.public.apiBase}/geocode`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ async function performSearch() {
     const locationData = await geocodeResponse.json();
 
     // Then, fetch the weather data
-    const weatherResponse = await fetch(`/api/weather?latitude=${locationData.latitude}&longitude=${locationData.longitude}`);
+    const weatherResponse = await fetch(`${config.public.apiBase}/weather?latitude=${locationData.latitude}&longitude=${locationData.longitude}`);
     
     if (!weatherResponse.ok) {
       throw new Error('Failed to fetch weather data');
