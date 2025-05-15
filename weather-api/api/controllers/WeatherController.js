@@ -4,7 +4,7 @@ module.exports = {
   async getWeather(req, res) {
     try {
       const { latitude, longitude } = req.query;
-      
+
       if (!latitude || !longitude) {
         return res.badRequest('Latitude and longitude are required');
       }
@@ -14,13 +14,13 @@ module.exports = {
         params: {
           latitude,
           longitude,
-          current: 'temperature_2m,weather_code',
+          current: 'temperature_2m,weather_code,relative_humidity_2m,cloud_cover',
           timezone: 'auto'
         }
       });
 
       const { current } = response.data;
-      
+
       // Map weather codes to conditions
       const weatherConditions = {
         0: 'Clear sky',
@@ -51,7 +51,9 @@ module.exports = {
 
       const weatherData = {
         temperature: current.temperature_2m,
-        condition: weatherConditions[current.weather_code] || 'Unknown'
+        condition: weatherConditions[current.weather_code] || 'Unknown',
+        humidity: current.relative_humidity_2m,
+        cloudCover: current.cloud_cover
       };
 
       return res.ok(weatherData);
@@ -96,4 +98,4 @@ module.exports = {
       return res.serverError('Failed to geocode city');
     }
   }
-}; 
+};

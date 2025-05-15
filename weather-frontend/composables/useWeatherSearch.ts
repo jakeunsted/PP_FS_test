@@ -6,6 +6,8 @@ export interface WeatherInfo {
   latitude: number;
   longitude: number;
   temperature: number;
+  humidity: number; // percentage
+  cloudCover: number; // percentage
   condition: string;
 }
 
@@ -59,6 +61,8 @@ export function useWeatherSearch() {
         latitude: locationData.latitude,
         longitude: locationData.longitude,
         temperature: weatherInfo.temperature,
+        humidity: weatherInfo.humidity,
+        cloudCover: weatherInfo.cloudCover,
         condition: weatherInfo.condition
       };
     } catch (error: any) {

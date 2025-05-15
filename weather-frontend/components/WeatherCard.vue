@@ -14,6 +14,8 @@
     <v-list-item>
       <v-list-item-title class="text-h5">{{ weatherData.temperature }}°C</v-list-item-title>
       <v-list-item-subtitle>{{ weatherData.condition }}</v-list-item-subtitle>
+      <v-list-item-subtitle>Cloud Cover: {{ weatherData.cloudCover }}%</v-list-item-subtitle>
+      <v-list-item-subtitle>Humidity: {{ weatherData.humidity }}%</v-list-item-subtitle>
     </v-list-item>
   </v-card>
 </template>
