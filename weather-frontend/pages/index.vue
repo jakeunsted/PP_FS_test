@@ -28,7 +28,7 @@
               color="primary"
               block
               size="large"
-              :disabled="!searchQuery.trim() || loading"
+              :disabled="!searchQuery || !searchQuery.trim() || loading"
               :loading="loading"
               class="mt-1"
             >

@@ -17,7 +17,7 @@ export function useWeatherSearch() {
   const weatherData = ref<WeatherInfo | null>(null);
 
   const rules = {
-    required: (value: string) => !!value.trim() || 'City name is required.',
+    required: (value: string) => !value || !value.trim() ? 'City name is required.' : true,
   };
 
   async function performSearch(searchQuery: string) {

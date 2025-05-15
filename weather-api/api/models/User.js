@@ -10,15 +10,10 @@ const bcrypt = require('bcryptjs');
 module.exports = {
 
   attributes: {
-
-    //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
-    //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
-    //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
-
-    id: { 
-      type: 'string', 
+    id: {
+      type: 'string',
       columnName: '_id',
-      autoIncrement: true 
+      autoIncrement: true
     },
     email: {
       type: 'string',
@@ -41,16 +36,11 @@ module.exports = {
       maxLength: 120,
       example: 'Mary Sue van der McHenst'
     },
-
-    //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
-    //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
-    //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
-
-
-    //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
-    //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
-    //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-
+    // Add the collection of favorite locations
+    favoriteLocations: {
+      collection: 'favouritelocation',
+      via: 'user'
+    },
   },
 
   // Lifecycle callback to hash password before creating a new user

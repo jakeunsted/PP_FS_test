@@ -2,7 +2,13 @@
   <v-card outlined>
     <v-card-title class="d-flex justify-space-between align-center">
       <span>Weather for {{ weatherData.city }}</span>
-      <v-btn icon="mdi-heart-outline" variant="text" color="pink" @click="toggleFavourite" title="Add to favourites">
+      <v-btn 
+        :icon="isFavourite ? 'mdi-heart' : 'mdi-heart-outline'" 
+        variant="text" 
+        :color="isFavourite ? 'pink' : 'grey'" 
+        @click="toggleFavourite" 
+        :title="isFavourite ? 'Remove from favourites' : 'Add to favourites'"
+      >
       </v-btn>
     </v-card-title>
     <v-list-item>
@@ -14,7 +20,9 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '../stores/auth';
+import { useFavouritesStore } from '../stores/favourites';
 import { navigateTo } from 'nuxt/app';
+import { ref, onMounted } from 'vue';
 
 interface WeatherInfo {
   city: string;
@@ -29,15 +37,45 @@ const props = defineProps<{
 }>();
 
 const authStore = useAuthStore();
+const favouritesStore = useFavouritesStore();
+const isFavourite = ref(false);
 
 async function toggleFavourite() {
   if (!props.weatherData) return;
   if (!authStore.isLoggedIn) {
-    // navigate to login page
     navigateTo('/login');
+    return;
   }
 
-  const userIdentifier = authStore.isLoggedIn ? authStore.user!.id : '';
-  console.log('Toggling favourite for:', props.weatherData.city, 'User ID:', userIdentifier);
+  try {
+    const userId = authStore.user!.id;
+    
+    if (isFavourite.value) {
+      await favouritesStore.removeFavourite(userId, props.weatherData.city);
+    } else {
+      await favouritesStore.addFavourite(userId, props.weatherData);
+    }
+    
+    isFavourite.value = !isFavourite.value;
+  } catch (error) {
+    console.error('Error toggling favourite:', error);
+  }
 }
+
+// Check if this location is already a favourite when the component mounts
+async function checkIfFavourite() {
+  if (!authStore.isLoggedIn || !props.weatherData) return;
+  
+  try {
+    const userId = authStore.user!.id;
+    await favouritesStore.fetchFavourites(userId);
+    isFavourite.value = favouritesStore.isFavourite(props.weatherData);
+  } catch (error) {
+    console.error('Error checking favourite status:', error);
+  }
+}
+
+onMounted(() => {
+  checkIfFavourite();
+});
 </script> 

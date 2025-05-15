@@ -10,7 +10,7 @@ module.exports = {
    * Add a location to a user's favourites.
    * Expected route: POST /api/favourites
    * Expected body: {
-   * userIdentifier: 'some-unique-id-for-the-user',
+   * userId: 'user-id',
    * cityName: 'London',
    * latitude: 51.5074,
    * longitude: -0.1278,
@@ -19,15 +19,15 @@ module.exports = {
    */
   create: async function (req, res) {
     try {
-      const { userIdentifier, cityName, latitude, longitude, country } = req.allParams();
+      const { userId, cityName, latitude, longitude, country } = req.allParams();
 
-      if (!userIdentifier || !cityName || typeof latitude === 'undefined' || typeof longitude === 'undefined') {
-        return res.badRequest('Missing required parameters: userIdentifier, cityName, latitude, and longitude are required.');
+      if (!userId || !cityName || typeof latitude === 'undefined' || typeof longitude === 'undefined') {
+        return res.badRequest('Missing required parameters: userId, cityName, latitude, and longitude are required.');
       }
 
       // Check if this location is already a favourite for this user
       const existingFavourite = await FavouriteLocation.findOne({
-        userIdentifier,
+        user: userId,
         latitude,
         longitude,
       });
@@ -37,7 +37,7 @@ module.exports = {
       }
 
       const newFavourite = await FavouriteLocation.create({
-        userIdentifier,
+        user: userId,
         cityName,
         latitude,
         longitude,
@@ -53,16 +53,16 @@ module.exports = {
 
   /**
    * Get all favourite locations for a specific user.
-   * Expected route: GET /api/favourites?userIdentifier=:identifier
+   * Expected route: GET /api/favourites?userId=:id
    */
   find: async function (req, res) {
     try {
-      const userIdentifier = req.param('userIdentifier');
-      if (!userIdentifier) {
-        return res.badRequest('The "userIdentifier" query parameter is required.');
+      const userId = req.param('userId');
+      if (!userId) {
+        return res.badRequest('The "userId" query parameter is required.');
       }
 
-      const favourites = await FavouriteLocation.find({ userIdentifier });
+      const favourites = await FavouriteLocation.find({ user: userId });
       return res.ok(favourites);
     } catch (err) {
       sails.log.error('Error in FavouriteLocationController.find:', err);
@@ -72,23 +72,23 @@ module.exports = {
 
   /**
    * Remove a location from a user's favourites.
-   * Expected route: DELETE /api/favourites/:id?userIdentifier=:identifier
+   * Expected route: DELETE /api/favourites/:id?userId=:id
    * The :id is the ID of the favourite record itself.
-   * The userIdentifier in the query is for an extra check to ensure a user only deletes their own items.
+   * The userId in the query is for an extra check to ensure a user only deletes their own items.
    */
   destroy: async function (req, res) {
     try {
       const favouriteId = req.param('id');
-      const userIdentifier = req.param('userIdentifier'); // For verification
+      const userId = req.param('userId'); // For verification
 
       if (!favouriteId) {
         return res.badRequest('Favourite ID (/:id) is required for deletion.');
       }
-      if (!userIdentifier) {
-        return res.badRequest('The "userIdentifier" query parameter is required for verification.');
+      if (!userId) {
+        return res.badRequest('The "userId" query parameter is required for verification.');
       }
 
-      const favouriteToRemove = await FavouriteLocation.findOne({ id: favouriteId, userIdentifier });
+      const favouriteToRemove = await FavouriteLocation.findOne({ id: favouriteId, user: userId });
 
       if (!favouriteToRemove) {
         return res.status(404).json({ message: 'Favourite not found for this user or it does not exist.' });
