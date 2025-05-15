@@ -37,6 +37,6 @@ async function toggleFavourite() {
   }
 
   const userIdentifier = authStore.isLoggedIn ? authStore.user!.id : '';
-  console.log('Toggling favourite for:', props.weatherData.city, 'User/Guest ID:', userIdentifier);
+  console.log('Toggling favourite for:', props.weatherData.city, 'User ID:', userIdentifier);
 }
 </script> 

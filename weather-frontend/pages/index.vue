@@ -10,7 +10,7 @@
             Search for current weather and forecasts.
           </v-card-subtitle>
 
-          <v-form @submit.prevent="performSearch">
+          <v-form @submit.prevent="handleSearch">
             <v-text-field
               v-model="searchQuery"
               label="Enter city name (e.g., London, Tokyo)"
@@ -52,92 +52,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
-import { useRuntimeConfig } from 'nuxt/app';
-import WeatherCard from '../components/WeatherCard.vue';
+import { useWeatherSearch } from '../composables/useWeatherSearch';
 
 const authStore = useAuthStore();
-const config = useRuntimeConfig(); // To get API base URL
 const searchQuery = ref('');
-const loading = ref(false);
-const searchError = ref<string | null>(null);
-const showErrorAlert = ref(false);
-
-interface WeatherInfo {
-  city: string;
-  latitude: number;
-  longitude: number;
-  temperature: number;
-  condition: string;
-}
-const weatherData = ref<WeatherInfo | null>(null);
-
-const rules = {
-  required: (value: string) => !!value.trim() || 'City name is required.',
-};
+const { loading, searchError, showErrorAlert, weatherData, rules, performSearch } = useWeatherSearch();
 
 watch(searchError, (newValue) => {
   showErrorAlert.value = !!newValue;
 });
 
-async function performSearch() {
-  if (!searchQuery.value.trim()) {
-    searchError.value = 'Please enter a city name.';
-    return;
-  }
-  loading.value = true;
-  searchError.value = null;
-  weatherData.value = null;
-
-  try {
-    // First, geocode the city name
-    const geocodeResponse = await fetch(`${config.public.apiBase}/geocode`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ cityName: searchQuery.value.trim() })
-    });
-
-    if (!geocodeResponse.ok) {
-      throw new Error('City not found');
-    }
-
-    const locationData = await geocodeResponse.json();
-
-    // Then, fetch the weather data
-    const weatherResponse = await fetch(`${config.public.apiBase}/weather?latitude=${locationData.latitude}&longitude=${locationData.longitude}`);
-    
-    if (!weatherResponse.ok) {
-      throw new Error('Failed to fetch weather data');
-    }
-
-    const weatherInfo = await weatherResponse.json();
-
-    weatherData.value = {
-      city: locationData.city,
-      latitude: locationData.latitude,
-      longitude: locationData.longitude,
-      temperature: weatherInfo.temperature,
-      condition: weatherInfo.condition
-    };
-  } catch (error: any) {
-    console.error('Search error:', error);
-    searchError.value = `Could not find weather for "${searchQuery.value}". Please try another city.`;
-  } finally {
-    loading.value = false;
-  }
+async function handleSearch() {
+  await performSearch(searchQuery.value);
 }
 
-import { onMounted } from 'vue';
 onMounted(async () => {
   if (!authStore.isLoggedIn) {
     await authStore.fetchCurrentUser();
   }
 });
 </script>
-
-<style scoped>
-/* Removed fill-height class as it's no longer needed */
-</style>
