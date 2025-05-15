@@ -27,23 +27,20 @@ module.exports = {
       type: 'string',
       required: true,
       description: 'Securely hashed representation of the user\'s login password.',
-      protect: true, // Prevents password from being sent in query responses unless explicitly selected
+      protect: true,
       example: '2$28a8eabna301089103-13948134nad'
     },
     fullName: {
       type: 'string',
-      // required: true, // Make it optional if you prefer
       maxLength: 120,
       example: 'Mary Sue van der McHenst'
     },
-    // Add the collection of favorite locations
     favoriteLocations: {
       collection: 'favouritelocation',
       via: 'user'
     },
   },
 
-  // Lifecycle callback to hash password before creating a new user
   beforeCreate: async function (valuesToSet, proceed) {
     if (valuesToSet.password) {
       try {

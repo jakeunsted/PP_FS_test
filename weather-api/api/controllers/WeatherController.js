@@ -66,7 +66,7 @@ module.exports = {
   async geocode(req, res) {
     try {
       const { cityName } = req.body;
-      
+
       if (!cityName) {
         return res.badRequest('City name is required');
       }
@@ -86,7 +86,7 @@ module.exports = {
       }
 
       const { name, latitude, longitude, country } = response.data.results[0];
-      
+
       return res.ok({
         city: name,
         latitude,

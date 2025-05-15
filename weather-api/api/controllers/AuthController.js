@@ -21,17 +21,15 @@ module.exports = {
         return res.badRequest({ error: 'Email and password are required.' });
       }
 
-      // Password validation (e.g., minimum length) can be added here or in the model
+      // Password validation
       if (password.length < 8) {
         return res.badRequest({ error: 'Password must be at least 8 characters long.' });
       }
 
-      // The User model's beforeCreate will hash the password
       const newUser = await User.create({ email, password, fullName }).fetch();
 
-      // For session-based auth, log the user in immediately after registration
       req.session.userId = newUser.id;
-      req.session.userEmail = newUser.email; // Storing email for convenience
+      req.session.userEmail = newUser.email;
 
       // Return user info (excluding password)
       const userResponse = { ...newUser };
@@ -43,8 +41,7 @@ module.exports = {
       });
 
     } catch (err) {
-      if (err.name === 'UsageError') { // Typically from Waterline unique constraints etc.
-        // Check if it's a unique constraint violation for email
+      if (err.name === 'UsageError') {
         if (err.code === 'E_UNIQUE') {
           return res.status(409).json({ error: 'Email address is already taken.' });
         }
@@ -125,8 +122,7 @@ module.exports = {
     try {
       const user = await User.findOne({ id: req.session.userId });
       if (!user) {
-        // This case should ideally not happen if session.userId is valid
-        req.session.destroy(); // Clean up invalid session
+        req.session.destroy();
         return res.status(401).json({ error: 'User not found for current session. Session terminated.' });
       }
 
