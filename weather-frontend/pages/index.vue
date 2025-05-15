@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid class="fill-height pa-0 ma-0"> <v-row align="center" justify="center">
+  <v-container fluid class="min-h-screen p-0 m-0">
+    <v-row align="center" justify="center">
       <v-col cols="12" sm="10" md="8" lg="6" xl="4">
         <v-card class="pa-sm-6 pa-md-8" elevation="3">
           <v-card-title class="text-h4 font-weight-bold text-center mb-2 primary--text">
@@ -165,7 +166,5 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.fill-height {
-  min-height: 100vh;
-}
+/* Removed fill-height class as it's no longer needed */
 </style>
