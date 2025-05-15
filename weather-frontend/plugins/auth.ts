@@ -1,4 +1,4 @@
-import { useAuthStore } from '~/stores/auth';
+import { useAuthStore } from '../stores/auth';
 import type { Pinia } from 'pinia';
 
 export default defineNuxtPlugin(async (nuxtApp) => {

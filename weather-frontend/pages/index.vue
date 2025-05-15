@@ -65,12 +65,6 @@
 import { ref, watch } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRuntimeConfig } from 'nuxt/app';
-// @ts-ignore
-import { definePageMeta } from '#imports'
-
-definePageMeta({
-  layout: 'default'
-})
 
 const authStore = useAuthStore();
 const config = useRuntimeConfig(); // To get API base URL

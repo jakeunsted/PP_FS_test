@@ -57,13 +57,6 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRuntimeConfig } from 'nuxt/app';
 
-// @ts-ignore
-import { definePageMeta } from '#imports'
-
-definePageMeta({
-  layout: 'auth'
-})
-
 const fullName = ref('');
 const email = ref('');
 const password = ref('');

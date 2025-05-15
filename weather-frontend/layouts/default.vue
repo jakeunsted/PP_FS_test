@@ -8,37 +8,19 @@
       <v-btn to="/" text>Home</v-btn>
       <v-btn v-if="authStore.isLoggedIn" to="/favourites" text>Favourites</v-btn>
       
-      <v-menu>
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-          >
-            <v-icon>mdi-account</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <template v-if="authStore.isLoggedIn">
-            <v-list-item>
-              <v-list-item-title class="text-subtitle-2">
-                {{ authStore.user?.email }}
-              </v-list-item-title>
-            </v-list-item>
-            <v-divider></v-divider>
-            <v-list-item @click="handleLogout">
-              <v-list-item-title>Logout</v-list-item-title>
-            </v-list-item>
-          </template>
-          <template v-else>
-            <v-list-item to="/login">
-              <v-list-item-title>Login</v-list-item-title>
-            </v-list-item>
-            <v-list-item to="/register">
-              <v-list-item-title>Register</v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list>
-      </v-menu>
+      <!-- Auth Button -->
+      <v-btn
+        v-if="authStore.isLoggedIn"
+        @click="handleLogout"
+      >
+        Logout
+      </v-btn>
+      <v-btn
+        v-else
+        to="/login"
+      >
+        Login
+      </v-btn>
     </v-app-bar>
 
     <v-main>

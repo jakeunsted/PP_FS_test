@@ -1,68 +1,74 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Login</h2>
-      </div>
-      <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-        <div class="rounded-md shadow-sm -space-y-px">
-          <div>
-            <label for="email" class="sr-only">Email address</label>
-            <input
-              id="email"
-              v-model="email"
+  <v-container fluid class="min-h-screen p-0 m-0">
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="10" md="8" lg="6" xl="4">
+        <v-card class="pa-sm-6 pa-md-8 mt-10" elevation="3">
+          <v-card-title class="text-h4 font-weight-bold text-center mb-2 primary--text">
+            Login
+          </v-card-title>
+          <v-card-subtitle class="text-center mb-6">
+            Sign in to your account
+          </v-card-subtitle>
+
+          <v-form @submit.prevent="handleLogin">
+            <v-text-field
+              :model-value="email"
+              @update:model-value="email = $event"
+              label="Email address"
               type="email"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Email address"
-            />
-          </div>
-          <div>
-            <label for="password" class="sr-only">Password</label>
-            <input
-              id="password"
-              v-model="password"
+              variant="filled"
+              class="mb-3"
+              persistent-placeholder
+              autocomplete="email"
+            ></v-text-field>
+            <v-text-field
+              :model-value="password"
+              @update:model-value="password = $event"
+              label="Password"
               type="password"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Password"
-            />
-          </div>
-        </div>
+              variant="filled"
+              class="mb-3"
+              persistent-placeholder
+              autocomplete="current-password"
+            ></v-text-field>
 
-        <div v-if="errorMessage" class="rounded-md bg-red-50 p-4">
-          <div class="text-sm text-red-700">{{ errorMessage }}</div>
-        </div>
+            <v-alert
+              v-if="errorMessage"
+              type="error"
+              dense
+              dismissible
+              class="mb-3"
+            >
+              {{ errorMessage }}
+            </v-alert>
 
-        <div>
-          <button
-            type="submit"
-            :disabled="loading"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <span v-if="loading" class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <v-progress-circular
-                indeterminate
-                color="white"
-                size="20"
-                width="2"
-              ></v-progress-circular>
-            </span>
-            {{ loading ? 'Logging in...' : 'Login' }}
-          </button>
-        </div>
+            <v-btn
+              type="submit"
+              color="primary"
+              block
+              size="large"
+              :loading="loading"
+              :disabled="loading"
+              class="mt-1"
+            >
+              {{ loading ? 'Logging in...' : 'Login' }}
+            </v-btn>
 
-        <div class="text-center">
-          <p class="text-sm text-gray-600">
-            Don't have an account?
-            <NuxtLink to="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
-              Register here
-            </NuxtLink>
-          </p>
-        </div>
-      </form>
-    </div>
-  </div>
+            <div class="text-center mt-4">
+              <p class="text-body-2">
+                Don't have an account?
+                <NuxtLink to="/register" class="text-primary text-decoration-none">
+                  Register here
+                </NuxtLink>
+              </p>
+            </div>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -71,18 +77,12 @@ import { ref } from 'vue';
 import { useRouter, navigateTo } from '#imports';
 import { useRuntimeConfig } from 'nuxt/app';
 import { useAuthStore } from '../stores/auth';
-// @ts-ignore
-import { definePageMeta } from '#imports'
-
-definePageMeta({
-  layout: 'auth'
-})
 
 const email = ref('');
 const password = ref('');
 const errorMessage = ref<string | null>(null);
 const loading = ref(false);
-const config = useRuntimeConfig(); // To get API base URL
+const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -102,14 +102,12 @@ async function handleLogin() {
     console.log('Login successful:', response.user);
     await authStore.setUser(response.user);
     
-    // Try using navigateTo instead of router.push
     try {
       console.log('Attempting navigation...');
       await navigateTo('/', { replace: true });
       console.log('Navigation completed');
     } catch (navigationError) {
       console.error('Navigation error:', navigationError);
-      // Fallback to router.push if navigateTo fails
       try {
         console.log('Falling back to router.push...');
         await router.push('/');

@@ -17,10 +17,6 @@ export const useAuthStore = defineStore('auth', {
     async setUser(userData: User | null) {
       this.user = userData;
       this.isLoggedIn = !!userData;
-      if (!userData) {
-        // logout
-        await this.logout();
-      }
     },
     async fetchCurrentUser() {
       if (this.isLoggedIn) return;
@@ -46,7 +42,7 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.error('Error during logout API call:', error);
       } finally {
-        await this.setUser(null);
+        this.setUser(null);
         // Navigate to login or home page
         const router = useRouter();
         router.push('/login');
