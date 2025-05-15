@@ -42,17 +42,7 @@
             </v-alert>
 
             <div v-if="weatherData" class="mt-4">
-              <v-card outlined>
-                <v-card-title class="d-flex justify-space-between align-center">
-                  <span>Weather for {{ weatherData.city }}</span>
-                  <v-btn icon="mdi-heart-outline" variant="text" color="pink" @click="toggleFavourite" title="Add to favourites">
-                    </v-btn>
-                </v-card-title>
-                <v-list-item>
-                  <v-list-item-title class="text-h5">{{ weatherData.temperature }}°C</v-list-item-title>
-                  <v-list-item-subtitle>{{ weatherData.condition }}</v-list-item-subtitle>
-                  </v-list-item>
-                </v-card>
+              <WeatherCard :weather-data="weatherData" />
             </div>
           </div>
         </v-card>
@@ -65,6 +55,7 @@
 import { ref, watch } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRuntimeConfig } from 'nuxt/app';
+import WeatherCard from '../components/WeatherCard.vue';
 
 const authStore = useAuthStore();
 const config = useRuntimeConfig(); // To get API base URL
@@ -137,18 +128,6 @@ async function performSearch() {
   } finally {
     loading.value = false;
   }
-}
-
-async function toggleFavourite() {
-  if (!weatherData.value) return;
-  if (!authStore.isLoggedIn) {
-    // Prompt to login or handle guest identifier
-    searchError.value = "Please login to save favourites, or enable guest favourites.";
-    return;
-  }
-
-  const userIdentifier = authStore.isLoggedIn ? authStore.user!.id : '';
-  console.log('Toggling favourite for:', weatherData.value.city, 'User/Guest ID:', userIdentifier);
 }
 
 import { onMounted } from 'vue';
