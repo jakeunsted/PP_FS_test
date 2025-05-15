@@ -51,7 +51,13 @@ async function toggleFavourite() {
     const userId = authStore.user!.id;
     
     if (isFavourite.value) {
-      await favouritesStore.removeFavourite(userId, props.weatherData.city);
+      const favourite = favouritesStore.favourites.find(fav => 
+        fav.latitude === props.weatherData.latitude && 
+        fav.longitude === props.weatherData.longitude
+      );
+      if (favourite) {
+        await favouritesStore.removeFavourite(userId, favourite.id);
+      }
     } else {
       await favouritesStore.addFavourite(userId, props.weatherData);
     }

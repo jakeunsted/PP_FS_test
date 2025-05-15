@@ -1,11 +1,5 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12">
-        <h1 class="text-h4 mb-6">My Favourite Locations</h1>
-      </v-col>
-    </v-row>
-
     <v-row v-if="favouritesStore.loading">
       <v-col cols="12" class="text-center">
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -24,7 +18,6 @@
       <v-col cols="12" class="text-center">
         <v-alert type="info" variant="tonal">
           You haven't added any locations to your favourites yet.
-          <v-btn to="/" color="primary" class="ml-2">Search Locations</v-btn>
         </v-alert>
       </v-col>
     </v-row>
@@ -100,7 +93,7 @@ async function removeFavourite(favourite: any) {
   
   try {
     const userId = authStore.user!.id;
-    await favouritesStore.removeFavourite(userId, favourite.cityName);
+    await favouritesStore.removeFavourite(userId, favourite.id);
     delete weatherData.value[favourite.id];
   } catch (error) {
     console.error('Error removing favourite:', error);

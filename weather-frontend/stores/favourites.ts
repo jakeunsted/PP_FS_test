@@ -81,18 +81,18 @@ export const useFavouritesStore = defineStore('favourites', {
       }
     },
 
-    async removeFavourite(userId: string, cityName: string) {
+    async removeFavourite(userId: string, favouriteId: string) {
       const config = useRuntimeConfig();
       this.loading = true;
       this.error = null;
 
       try {
-        await $fetch(`${config.public.apiBase}/favourites/${cityName}`, {
+        await $fetch(`${config.public.apiBase}/favourites/${favouriteId}`, {
           method: 'DELETE',
           params: { userId },
           credentials: 'include'
         });
-        this.favourites = this.favourites.filter(fav => fav.cityName !== cityName);
+        this.favourites = this.favourites.filter(fav => fav.id !== favouriteId);
         return true;
       } catch (error: any) {
         console.error('Error removing favourite:', error);
