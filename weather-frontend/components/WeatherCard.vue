@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '../stores/auth';
+import { navigateTo } from 'nuxt/app';
 
 interface WeatherInfo {
   city: string;
@@ -32,8 +33,8 @@ const authStore = useAuthStore();
 async function toggleFavourite() {
   if (!props.weatherData) return;
   if (!authStore.isLoggedIn) {
-    // Prompt to login or handle guest identifier
-    return;
+    // navigate to login page
+    navigateTo('/login');
   }
 
   const userIdentifier = authStore.isLoggedIn ? authStore.user!.id : '';
